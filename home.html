@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Parallax Template - Materialize</title>
+
+  <!-- CSS  -->
+   <link href="css/icon.css" rel="stylesheet"> 
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+<div id = "board" class="container row">
+
+
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/materialize.js"></script>
+<script src="js/init.js"></script>
+<script>
+class Person{
+		constructor(id, name, lastName, picture){
+		this.id = id;
+		this.name = name;
+		this.lastName = lastName;
+		this.picture = picture;
+		}	
+	show () {
+		let html = `<div class="col s12 m6 card">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator" src="${this.avatar}">
+    </div>
+    <div class="card-content">
+      <span class="card-title activator grey-text text-darken-4">${this.name}<i class="material-icons right">more_vert</i></span>
+      <p><a href="#">This is a link</a></p>
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">${this.name}<i class="material-icons right">close</i></span>
+      <p>
+      	id: ${this.id}<br>
+      	nombre : ${this.name}<br>
+      	apellido: ${this.lastname}<br>
+      </p>
+    </div>
+  </div>`;
+  return html;
+	//console.log (`nombre: ${this.name} apellido: ${this.lastName} foto: ${this.picture}`);
+	}
+}
+
+var getData = (url)=> {
+	return new Promise((resolve, reject) =>{
+		const xhr = new XMLHttpRequest();
+		xhr.open("get", url);
+		xhr.onload =()=> resolve(xhr.responseText);
+		xhr.onerror = ()=>reject(xhr.statusText);
+		xhr.send();
+	});
+};
+	url ='https://reqres.in/api/users?page=2';
+	
+	getData(url).then((data)=>{
+		var info = JSON.parse(data);//convertimos el texto en objeto
+		for(let item of info.data){	//info.data tenemos el array de los objetos y los ponemos dentro de item
+			let person = new Person (item.id, item.first_name, item.last_name, item.avatar);//creamos una persona con los datos recibidos del servidor
+			document.getElementById('board').innerHTML+=person.show();
+			//person.show();//mostramos la persona creada con los dato optenidos del servidor
+		}
+		//console.log(data);
+	}).catch ((error)=>{
+	console.log(error);
+	});
+</script>
+
+ 	
+  </body>
+}
+</html>
